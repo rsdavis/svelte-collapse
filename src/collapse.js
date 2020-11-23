@@ -1,8 +1,14 @@
 
 export default function collapse (node, params) {
 
-    let { open } = params
-    console.log('init', open)
+    const defaultParams = {
+        open: true,
+        duration: 0.2,
+        easing: 'ease'
+    }
+
+    params = Object.assign(defaultParams, params)
+
     const noop = () => {}
     let transitionEndResolve = noop
     let transitionEndReject = noop
@@ -25,28 +31,14 @@ export default function collapse (node, params) {
         return new Promise(requestAnimationFrame)
     }
 
+    function transition () {
+        return `height ${params.duration}s ${params.easing}`
+    }
+
     // set initial styles
     node.style.overflow = 'hidden'
-    node.style.transition = 'height 1s ease'
-    node.style.height = open ? 'auto' : '0px'
-
-    // setup mutation observer
-    const config = {
-        childList: true,
-        subtree: true,
-        characterData: true
-        // attributes: true
-    }
-
-    function callback (mutationsList, observer) {
-        console.log('mutation', params)
-        if (params.open) {
-            node.style.height = node.scrollHeight
-        }
-    }
-
-    const observer = new MutationObserver(callback)
-    observer.observe(node, config)
+    node.style.transition = transition()
+    node.style.height = params.open ? 'auto' : '0px'
 
     async function enter () {
 
@@ -75,7 +67,8 @@ export default function collapse (node, params) {
 
             // set height to pixels, and turn transition back on
             node.style.height = node.scrollHeight + 'px'
-            node.style.transition = 'height 1s ease'
+            node.style.transition = transition()
+            console.log(node.style.transition)
             await nextFrame()
 
             // start the transition
@@ -93,12 +86,11 @@ export default function collapse (node, params) {
     }
 
     function update (newParams) {
-        params = newParams
+        params = Object.assign(params, newParams)
         params.open ? enter() : leave()
     }
 
     function destroy () {
-        observer.disconnect()
         node.removeEventListener('transitionend', listener)
     }
 
