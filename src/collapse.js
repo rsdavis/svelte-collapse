@@ -68,7 +68,6 @@ export default function collapse (node, params) {
             // set height to pixels, and turn transition back on
             node.style.height = node.scrollHeight + 'px'
             node.style.transition = transition()
-            console.log(node.style.transition)
             await nextFrame()
 
             // start the transition
