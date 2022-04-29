@@ -36,9 +36,15 @@ export default function collapse (node, params) {
     }
 
     // set initial styles
-    node.style.overflow = 'hidden'
     node.style.transition = transition()
     node.style.height = params.open ? 'auto' : '0px'
+
+    if (params.open) {
+        node.style.overflow = 'visible'
+    }
+    else {
+        node.style.overflow = 'hidden'
+    }
 
     async function enter () {
 
@@ -51,6 +57,7 @@ export default function collapse (node, params) {
         try {
             await asyncTransitionEnd()
             node.style.height = 'auto'
+            node.style.overflow = 'visible'
         } catch(err) {
             // interrupted by a leave transition
         }
@@ -72,6 +79,7 @@ export default function collapse (node, params) {
 
             // start the transition
             node.style.height = '0px'
+            node.style.overflow = 'hidden'
 
         }
         else {
