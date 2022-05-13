@@ -78,14 +78,15 @@ export default function collapse (node, params) {
             await nextFrame()
 
             // start the transition
-            node.style.height = '0px'
             node.style.overflow = 'hidden'
+            node.style.height = '0px'
 
         }
         else {
 
             // we are interrupting an enter transition
             transitionEndReject()
+            node.style.overflow = 'hidden'
             node.style.height = '0px'
 
         }
