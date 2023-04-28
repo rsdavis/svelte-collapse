@@ -7,5 +7,5 @@ declare module "svelte-collapse" {
 	easing: string;
   }
 
-  export default function collapse(node: HTMLElement, params: CollapseParams): ActionReturn;
+  export default function collapse(node: HTMLElement, params: Partial<CollapseParams>): ActionReturn;
 }
