@@ -13,11 +13,13 @@ export default function collapse (node, params) {
     let transitionEndResolve = noop
     let transitionEndReject = noop
 
-    const listener = node.addEventListener('transitionend', () => {
-        transitionEndResolve()
-        transitionEndResolve = noop
-        transitionEndReject = noop
-    })
+    const listener = () => {
+        transitionEndResolve();
+        transitionEndResolve = noop;
+        transitionEndReject = noop;
+    };
+
+    node.addEventListener('transitionend', listener);
 
     // convenience functions
     async function asyncTransitionEnd () {
